@@ -1,4 +1,14 @@
+<p align="center">
+  <img src="assets/korsh-coins.png" alt="Korsh ($KSH) Logo" width="220" />
+</p>
+
 # KORSH ($KSH) CORE WHITEPAPER
+
+<p align="center">
+  <b>🌐 Language / Idioma:</b> <b>🇬🇧 English (Current)</b> &nbsp;|&nbsp; <a href="WHITEPAPER_ES.md">🇪🇸 Leer en Español</a>
+</p>
+
+---
 
 **A Hybrid Consensus Cryptocurrency: Pure CPU Proof-of-Work and Deterministic Masternodes**
 

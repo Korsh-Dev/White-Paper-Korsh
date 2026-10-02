@@ -1,286 +1,280 @@
+<p align="center">
+  <img src="assets/korsh-coins.png" alt="Korsh ($KSH) Logo" width="220" />
+</p>
+
 # KORSH ($KSH) CORE WHITEPAPER
 
-**Una Criptomoneda de Consenso Híbrido: Prueba de Trabajo CPU Pura y Masternodes Deterministas**
-
-*Versión:* 1.0 — *Red Principal (Mainnet):* Activa  
-*Fecha:* Octubre 2026  
-*Licencia:* Código Abierto (MIT License)  
-*Repositorio Oficial de Código:* [github.com/Korsh-Dev/Korsh-Code-Mainnet](https://github.com/Korsh-Dev/Korsh-Code-Mainnet)  
-*Repositorio del Whitepaper:* [github.com/Korsh-Dev/White-Paper-Korsh](https://github.com/Korsh-Dev/White-Paper-Korsh)  
+<p align="center">
+  <b>🌐 Language / Idioma:</b> <b>🇬🇧 English (Current)</b> &nbsp;|&nbsp; <a href="WHITEPAPER_ES.md">🇪🇸 Leer en Español</a>
+</p>
 
 ---
 
-## Índice de Contenidos
+**A Hybrid Consensus Cryptocurrency: Pure CPU Proof-of-Work and Deterministic Masternodes**
 
-1. [Resumen Ejecutivo (Executive Summary)](#1-resumen-ejecutivo-executive-summary)
-2. [Filosofía y Principios de Diseño](#2-filosofía-y-principios-de-diseño)
-3. [Especificaciones Técnicas y Parámetros de Red](#3-especificaciones-técnicas-y-parámetros-de-red)
-4. [Arquitectura de Consenso Híbrido: Capa 1 y Capa 2](#4-arquitectura-de-consenso-híbrido-capa-1-y-capa-2)
-   - 4.1 [Capa 1: Minería CPU con Yespower 1.0 (N=256, r=8)](#41-capa-1-minería-cpu-con-yespower-10-n256-r8)
-   - 4.2 [Retargeting Dinámico: Dark Gravity Wave v3 (DGW-v3)](#42-retargeting-dinámico-dark-gravity-wave-v3-dgw-v3)
-   - 4.3 [Capa 2: Masternodes Deterministas (DIP0003)](#43-capa-2-masternodes-deterministas-dip0003)
-   - 4.4 [Quórums LLMQ y Criptografía de Umbral BLS](#44-quórums-llmq-y-criptografía-de-umbral-bls)
-   - 4.5 [InstantSend: Liquidación Instantánea y Protección Doble Gasto](#45-instantsend-liquidación-instantánea-y-protección-doble-gasto)
-   - 4.6 [ChainLocks: Inmunidad Criptográfica ante Ataques de Reorganización del 51%](#46-chainlocks-inmunidad-criptográfica-ante-ataques-de-reorganización-del-51)
-   - 4.7 [Gobernanza Descentralizada y Propuestas On-Chain](#47-gobernanza-descentralizada-y-propuestas-on-chain)
-5. [Tokenomics y Emisión Monetaria](#5-tokenomics-y-emisión-monetaria)
-   - 5.1 [Principios Económicos Fundamentales](#51-principios-económicos-fundamentales)
-   - 5.2 [Formulación Matemática de la Emisión](#52-formulación-matemática-de-la-emisión)
-   - 5.3 [Calendario de Emisión Multiera](#53-calendario-de-emisión-multiera)
-   - 5.4 [Dinámica de Colateral y Shock de Oferta de Masternodes](#54-dinámica-de-colateral-y-shock-de-oferta-de-masternodes)
-6. [Ecosistema de Software e Infraestructura](#6-ecosistema-de-software-e-infraestructura)
-   - 6.1 [Korsh Core Daemon y Billetera Qt GUI](#61-korsh-core-daemon-y-billetera-qt-gui)
-   - 6.2 [Software de Minería Optimizado (AVX2 / AVX-512)](#62-software-de-minería-optimizado-avx2--avx-512)
-   - 6.3 [Billetera Ligera Web (Web Wallet)](#63-billetera-ligera-web-web-wallet)
-   - 6.4 [Explorador Público de la Blockchain](#64-explorador-público-de-la-blockchain)
-   - 6.5 [Infraestructura de Minería en Piscina (Mining Pool Stratum)](#65-infraestructura-de-minería-en-piscina-mining-pool-stratum)
-   - 6.6 [Aplicación Móvil de Minería y Monitoreo](#66-aplicación-móvil-de-minería-y-monitoreo)
-7. [Análisis de Seguridad y Resistencia de Red](#7-análisis-de-seguridad-y-resistencia-de-red)
-   - 7.1 [Inviabilidad Económica de Alquiler de Hashrate](#71-inviabilidad-económica-de-alquiler-de-hashrate)
-   - 7.2 [Resistencia a Ataques Sybil en la Red de Masternodes](#72-resistencia-a-ataques-sybil-en-la-red-de-masternodes)
-   - 7.3 [Punto de Control Determinista (Checkpoints)](#73-punto-de-control-determinista-checkpoints)
-8. [Hoja de Ruta (Roadmap)](#8-hoja-de-ruta-roadmap)
-9. [Conclusión](#9-conclusión)
-10. [Aviso Legal (Disclaimer)](#10-aviso-legal-disclaimer)
+*Version:* 1.0 — *Network:* Mainnet (Active)  
+*Date:* October 2026  
+*License:* MIT Open Source License  
+*Official Code Repository:* [github.com/Korsh-Dev/Korsh-Code-Mainnet](https://github.com/Korsh-Dev/Korsh-Code-Mainnet)  
+*Whitepaper Repository:* [github.com/Korsh-Dev/White-Paper-Korsh](https://github.com/Korsh-Dev/White-Paper-Korsh)  
 
 ---
 
-## 1. Resumen Ejecutivo (Executive Summary)
+## Table of Contents
 
-**Korsh ($KSH)** es una red blockchain descentralizada de Capa 1 de código abierto diseñada para materializar y proteger la visión original concebida por Satoshi Nakamoto: *"1 CPU = 1 Voto"*.
-
-A medida que la industria de las criptomonedas maduró, los esquemas de consenso basados exclusivamente en Prueba de Trabajo (PoW) tradicional sufrieron un proceso acelerado de centralización. La minería derivó hacia granjas industriales operadas por clústeres masivos de circuitos integrados de aplicación específica (ASIC), granjas de GPU corporativas y matrices de compuertas lógicas programables en campo (FPGA). Este fenómeno expulsó gradualmente al usuario común, erigió barreras de capital inaccesibles y concentró la seguridad del libro mayor en monopolios geográficos y fabricantes exclusivos de silicio.
-
-Korsh resuelve esta problemática de raíz mediante un modelo arquitectónico de dos capas complementarias:
-
-1. **Lanzamiento Justo (Fair Launch) y 0% Premine:** Sin asignaciones ocultas, sin ventas privadas, sin ICO, sin asignaciones previas a desarrolladores ni inversores de capital de riesgo. Cada moneda en circulación se origina de manera transparente mediante trabajo computacional o recompensas de servicio de red.
-2. **Algoritmo Yespower 1.0 ($N=256, r=8$):** Un esquema de hashing estrictamente intensivo en memoria (*memory-hard*), diseñado para residir por completo en la memoria caché L2 de los procesadores convencionales de 64 bits. Esta configuración anula cualquier ventaja comercial o de rendimiento para arquitecturas ASIC y GPU, manteniendo una eficiencia energética sobresaliente.
-3. **Capa Secundaria de Masternodes Deterministas (DIP0003):** Una capa de infraestructura incentivada basada en listas deterministas de nodos en cadena (*on-chain*), protegida mediante quórums LLMQ (*Long-Living Masternode Quorums*) y firmas agregadas BLS. Provee finalización instantánea de transacciones (*InstantSend* en 2 a 3 segundos), resistencia criptográfica matemática contra ataques de reorganización profunda del 51% (*ChainLocks*) y un sistema nativo de gobernanza descentralizada.
-4. **Política Monetaria Estricta y Deflacionaria:** Un límite de suministro absoluto e inmutable de **10,000,000 KSH** regido por un mecanismo de reducción a la mitad (*halving*) cada 2,500,000 bloques (~4.75 años), replicando la solidez de la escasez matemática del patrón oro digital.
+1. [Executive Summary](#1-executive-summary)
+2. [Philosophy and Design Principles](#2-philosophy-and-design-principles)
+3. [Technical Specifications and Network Parameters](#3-technical-specifications-and-network-parameters)
+4. [Hybrid Consensus Architecture: Layer 1 and Layer 2](#4-hybrid-consensus-architecture-layer-1-and-layer-2)
+   - 4.1 [Layer 1: CPU Mining via Yespower 1.0 (N=256, r=8)](#41-layer-1-cpu-mining-via-yespower-10-n256-r8)
+   - 4.2 [Dynamic Retargeting: Dark Gravity Wave v3 (DGW-v3)](#42-dynamic-retargeting-dark-gravity-wave-v3-dgw-v3)
+   - 4.3 [Layer 2: Deterministic Masternodes (DIP0003)](#43-layer-2-deterministic-masternodes-dip0003)
+   - 4.4 [LLMQ Quorums and BLS Threshold Signatures](#44-llmq-quorums-and-bls-threshold-signatures)
+   - 4.5 [InstantSend: Real-Time Settlement and Double-Spend Immunity](#45-instantsend-real-time-settlement-and-double-spend-immunity)
+   - 4.6 [ChainLocks: Cryptographic Protection Against 51% Reorganization Attacks](#46-chainlocks-cryptographic-protection-against-51-reorganization-attacks)
+   - 4.7 [Decentralized On-Chain Governance and Treasury](#47-decentralized-on-chain-governance-and-treasury)
+5. [Tokenomics and Monetary Issuance](#5-tokenomics-and-monetary-issuance)
+   - 5.1 [Foundational Economic Tenets](#51-foundational-economic-tenets)
+   - 5.2 [Mathematical Emission Formulation](#52-mathematical-emission-formulation)
+   - 5.3 [Multi-Era Emission Schedule](#53-multi-era-emission-schedule)
+   - 5.4 [Collateral Mechanics and Masternode Supply Shock](#54-collateral-mechanics-and-masternode-supply-shock)
+6. [Software Ecosystem and Infrastructure](#6-software-ecosystem-and-infrastructure)
+   - 6.1 [Korsh Core Daemon and Qt GUI Wallet](#61-korsh-core-daemon-and-qt-gui-wallet)
+   - 6.2 [Dedicated CPU Miner (AVX2 / AVX-512)](#62-dedicated-cpu-miner-avx2--avx-512)
+   - 6.3 [Client-Side Web Wallet](#63-client-side-web-wallet)
+   - 6.4 [Public Block Explorer](#64-public-block-explorer)
+   - 6.5 [Official Mining Pool (Stratum)](#65-official-mining-pool-stratum)
+   - 6.6 [Mobile Mining and Network Monitoring App](#66-mobile-mining-and-network-monitoring-app)
+7. [Security Analysis and Threat Resistance](#7-security-analysis-and-threat-resistance)
+   - 7.1 [Economic Infeasibility of Hashrate Rental](#71-economic-infeasibility-of-hashrate-rental)
+   - 7.2 [Sybil Attack Resistance in Layer 2](#72-sybil-attack-resistance-in-layer-2)
+   - 7.3 [Deterministic Checkpointing](#73-deterministic-checkpointing)
+8. [Strategic Roadmap](#8-strategic-roadmap)
+9. [Conclusion](#9-conclusion)
+10. [Legal Disclaimer](#10-legal-disclaimer)
 
 ---
 
-## 2. Filosofía y Principios de Diseño
+## 1. Executive Summary
 
-El diseño de Korsh parte de cuatro postulados innegociables:
+**Korsh ($KSH)** is a sovereign, open-source Layer 1 decentralized blockchain engineered to realize and protect Satoshi Nakamoto's original vision: *"one CPU, one vote"*.
 
-* **Accesibilidad Universal y Soberanía Individual:** La validación y emisión monetaria no deben exigir inversiones multimillonarias en hardware industrial. Cualquier usuario dotado de una computadora personal, computadora portátil o servidor estándar con procesador de 64 bits puede participar activamente en la seguridad del consenso y recibir recompensas proporcionales a su capacidad de procesamiento.
-* **Resistencia Robusta a la Centralización:** La arquitectura de hashing impone una restricción física: al requerir baja latencia de memoria con una huella de ~256 KB por hilo, optimizada para la memoria caché L2 del CPU, neutraliza la eficiencia económica del diseño de silicio dedicado (ASIC) y la paralelización masiva de las GPUs.
-* **Velocidad y Utilidad en el Mundo Real:** Un intervalo de bloque de 60 segundos proporciona un flujo continuo de confirmaciones, mientras que el bloqueo instantáneo de transacciones mediante quórums de Masternodes permite transacciones comerciales con liquidación segura en 2 a 3 segundos, protegiendo a los receptores contra riesgos de doble gasto sin requerir demoras prolongadas de confirmación.
-* **Transparencia Radical:** El Bloque Génesis fue emitido y auditado públicamente bajo parámetros criptográficos verificables, con el mensaje conmemorativo *"In honor of my uncle Satoshi Nakamoto"*, consolidando un compromiso inquebrantable con la ética de los orígenes de la descentralización.
+As the cryptocurrency landscape matured, classical Proof-of-Work (PoW) consensus mechanisms became increasingly monopolized by industrial mega-facilities operating Application-Specific Integrated Circuit (ASIC) clusters, commercial GPU arrays, and Field-Programmable Gate Arrays (FPGAs). This ongoing capital concentration disenfranchised everyday users, erected insurmountable entry barriers, and introduced central points of vulnerability through geographic and silicon manufacturing cartels.
+
+Korsh eliminates these systemic flaws through an integrated two-tier architecture:
+
+1. **Fair Launch and 0% Premine:** Zero developer pre-allocations, no private sales, no ICO, and no venture capital reservations. Every existing coin originates transparently from computational validation or network infrastructure service.
+2. **Yespower 1.0 Algorithm ($N=256, r=8$):** A strictly memory-hard hashing function tailored to fit within the dedicated Level 2 (L2) cache of standard 64-bit consumer CPUs. This design negates the economic and physical viability of ASICs and GPUs while maintaining optimal energy efficiency per hash.
+3. **Deterministic Masternode Layer (DIP0003):** An incentivized second layer running on-chain deterministic node lists, secured by Long-Living Masternode Quorums (LLMQ) and BLS threshold signatures. This tier delivers near-instant transaction finality (**InstantSend** in 2–3 seconds), mathematical immunity against 51% deep chain reorganizations (**ChainLocks**), and decentralized on-chain governance.
+4. **Strict Deflationary Monetary Policy:** An immutable hard cap of **10,000,000 KSH** governed by predictable halving cycles every 2,500,000 blocks (~4.75 years), providing mathematical scarcity aligned with digital sound money principles.
 
 ---
 
-## 3. Especificaciones Técnicas y Parámetros de Red
+## 2. Philosophy and Design Principles
 
-La siguiente tabla resume los parámetros criptográficos y operacionales que rigen la red principal de Korsh:
+Korsh is founded upon four foundational axioms:
 
-| Parámetro | Valor / Especificación en Mainnet |
+* **Universal Accessibility:** Consensus participation and coin minting must not demand multi-million-dollar capital outlays. Any individual with a modern 64-bit laptop, desktop PC, or server can mine KSH profitably and validate transactions.
+* **Structural Centralization Resistance:** By establishing a ~256 KB memory footprint per hashing thread aligned with L2 CPU caches, the protocol renders dedicated ASIC silicon and massive GPU thread parallelism economically uncompetitive.
+* **Real-World Transactional Velocity:** While a 60-second block target guarantees steady base-layer settlement, masternode-driven InstantSend achieves transaction finality within 2–3 seconds, allowing merchants and point-of-sale systems to accept zero-confirmation payments with full cryptographic safety.
+* **Radical Transparency:** The genesis block was generated and audited publicly under verifiable conditions, immortalizing the tribute: *"In honor of my uncle Satoshi Nakamoto"*.
+
+---
+
+## 3. Technical Specifications and Network Parameters
+
+The table below outlines the core cryptographic and consensus parameters of the Korsh mainnet:
+
+| Parameter | Mainnet Specification |
 | :--- | :--- |
-| **Nombre de la Moneda** | Korsh |
-| **Símbolo / Ticker** | **$KSH** |
-| **Mecanismo de Consenso** | Consenso Híbrido: Prueba de Trabajo (PoW) + Masternodes Deterministas |
-| **Algoritmo de Hashing PoW** | **Yespower 1.0 ($N=256, r=8$)** |
-| **Ajuste de Dificultad** | **Dark Gravity Wave v3 (DGW-v3)** (Ventana móvil de 20 bloques) |
-| **Tiempo Objetivo por Bloque** | **60 segundos** (1 minuto) |
-| **Recompensa Base Inicial por Bloque** | **2.00 KSH** |
-| **Distribución de Recompensa de Bloque** | **70% Mineros PoW** (1.40 KSH) \| **30% Masternodes** (0.60 KSH) |
-| **Suministro Máximo Inmutable (Hard Cap)**| **10,000,000 KSH** |
-| **Intervalo de Reducción (Halving)** | Cada **2,500,000 bloques** (~4.75 años a 60 seg/bloque) |
-| **Preminado (Premine)** | **0 KSH (0.00%) — Fair Launch** |
-| **Colateral Masternode Regular** | **1,500 KSH** (Peso de voto: 1) |
-| **Colateral Masternode Evo (Reservado)** | **7,500 KSH** (Peso de voto: 5) |
-| **Formato de Direcciones Públicas** | Base58 con prefijo **"S"** (Prefix Byte: `63` decimal / `0x3F`) |
-| **Magic Bytes de Red P2P** | `0xCB 0x4B 0x53 0x48` (`\xcbKSH`) |
-| **Puerto P2P por Defecto** | **8383** |
-| **Puerto RPC por Defecto** | **8382** |
-| **Hash del Bloque Génesis** | `000017ec1f2f978429db70495ec7653aedca360e5f251bfe2a780ae5e731d7eb` |
-| **Merkle Root del Bloque Génesis** | `1dd60dd52dda0fd4b6912baca209aa327ae8b4825a23415b0a4356585897d073` |
-| **Mensaje del Bloque Génesis** | *"In honor of my uncle Satoshi Nakamoto"* |
+| **Coin Name** | Korsh |
+| **Asset Ticker** | **$KSH** |
+| **Consensus Model** | Hybrid: Pure CPU Proof-of-Work (PoW) + Deterministic Masternodes |
+| **PoW Hashing Algorithm** | **Yespower 1.0 ($N=256, r=8$)** |
+| **Difficulty Retargeting** | **Dark Gravity Wave v3 (DGW-v3)** (20-block rolling window) |
+| **Target Block Interval** | **60 seconds** (1 minute) |
+| **Initial Base Block Reward** | **2.00 KSH** |
+| **Block Subsidy Allocation** | **70% PoW Miners** (1.40 KSH) \| **30% Masternodes** (0.60 KSH) |
+| **Maximum Supply (Hard Cap)** | **10,000,000 KSH** (Strictly Enforced) |
+| **Halving Interval** | Every **2,500,000 blocks** (~4.75 years) |
+| **Premine** | **0 KSH (0.00%) — Fair Launch** |
+| **Regular Masternode Collateral** | **1,500 KSH** (Voting weight: 1) |
+| **Evolution Masternode Collateral** | **7,500 KSH** (Voting weight: 5) |
+| **Address Encoding** | Base58 with prefix **"S"** (Prefix Byte: `63` decimal / `0x3F`) |
+| **P2P Protocol Magic Bytes** | `0xCB 0x4B 0x53 0x48` (`\xcbKSH`) |
+| **Default P2P Port** | **8383** |
+| **Default RPC Port** | **8382** |
+| **Genesis Block Hash** | `000017ec1f2f978429db70495ec7653aedca360e5f251bfe2a780ae5e731d7eb` |
+| **Genesis Merkle Root** | `1dd60dd52dda0fd4b6912baca209aa327ae8b4825a23415b0a4356585897d073` |
+| **Genesis Timestamp Message** | *"In honor of my uncle Satoshi Nakamoto"* |
 
 ---
 
-## 4. Arquitectura de Consenso Híbrido: Capa 1 y Capa 2
+## 4. Hybrid Consensus Architecture: Layer 1 and Layer 2
 
-Korsh articula un modelo de seguridad cooperativo en dos niveles jerárquicos independientes pero estrechamente integrados:
+Korsh separates network tasks across two interconnected, collaborative tiers:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│                      TOPOLOGÍA DE RED KORSH ($KSH)                     │
+│                        KORSH NETWORK TOPOLOGY                          │
 └────────────────────────────────────────────────────────────────────────┘
                                     │
                                     ▼
 ┌────────────────────────────────────────────────────────────────────────┐
-│                   CAPA 1: MINERÍA CPU DE PRUEBA DE TRABAJO             │
-│  • Algoritmo: Yespower 1.0 (N=256, r=8)                                │
-│  • Huella de memoria ~256 KB ajustada a la caché L2 del procesador     │
-│  • Retargeting dinámico bloque a bloque: Dark Gravity Wave v3          │
-│  • Ordenamiento y ensamblaje de transacciones brutas                   │
-│  • Generación de bloques cada 60 segundos                              │
-│  • Percepción de incentivo: 70% del subsidio de bloque (1.40 KSH)      │
+│                    TIER 1: PROOF-OF-WORK CPU MINING                    │
+│  • Algorithm: Yespower 1.0 (N=256, r=8)                                │
+│  • Memory footprint ~256 KB tuned to CPU L2 cache                      │
+│  • Per-block dynamic difficulty retargeting: Dark Gravity Wave v3      │
+│  • Raw transaction collection, validation, and block assembly          │
+│  • Block production rate: 60 seconds                                   │
+│  • Economic subsidy: 70% of block reward (1.40 KSH in Era 1)           │
 └───────────────────────────────────┬────────────────────────────────────┘
-                                    │ Propagación del Bloque Candidato
+                                    │ Block Propagation
                                     ▼
 ┌────────────────────────────────────────────────────────────────────────┐
-│               CAPA 2: MASTERNODES DETERMINISTAS (DIP0003)              │
-│  • Nodos de alta disponibilidad con colateral de 1,500 KSH             │
-│  • Quórums LLMQ con firmas agregadas BLS (Criptografía de umbral)      │
-│  • InstantSend: Bloqueo irrevocable de transacciones en 2 a 3 segundos │
-│  • ChainLocks: Firma de bloque que previene reorganizaciones del 51%   │
-│  • Gobernanza descentralizada y superbloques de desarrollo comunitario │
-│  • Percepción de incentivo: 30% del subsidio de bloque (0.60 KSH)      │
+│              TIER 2: DETERMINISTIC MASTERNODES (DIP0003)               │
+│  • High-availability nodes with verifiable collateral (1,500 KSH)      │
+│  • LLMQ Quorums with BLS threshold signatures                          │
+│  • InstantSend: Deterministic transaction locking in 2–3 seconds       │
+│  • ChainLocks: Cryptographic block signing preventing 51% reorgs       │
+│  • On-chain decentralized governance and community proposal funding    │
+│  • Economic subsidy: 30% of block reward (0.60 KSH in Era 1)           │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 4.1 Capa 1: Minería CPU con Yespower 1.0 ($N=256, r=8$)
+### 4.1 Layer 1: CPU Mining via Yespower 1.0 ($N=256, r=8$)
 
-El algoritmo de prueba de trabajo adoptado por Korsh es una parametrización optimizada de la familia **Yespower**, reconocida en la criptografía aplicada por su resistencia a los circuitos ASIC y a las GPU mediante el uso intensivo de la memoria (*memory-hard hashing*).
+The primary consensus layer utilizes **Yespower 1.0**, an advanced memory-hard cryptographic proof-of-work algorithm designed to enforce symmetric hardware competitiveness.
 
-La huella de memoria requerida por cada hilo de ejecución de Yespower se define según la fórmula:
+The memory working set per hashing thread is governed by:
 
-$$\text{Memoria por Hilo} = (128 \times N \times r) \text{ bytes} + \text{S-Boxes}$$
+$$\text{Memory Per Thread} = (128 \times N \times r) \text{ bytes} + \text{S-Boxes}$$
 
-Al establecer $N = 256$ y $r = 8$:
+Under Korsh parameters ($N = 256, r = 8$):
 
-$$\text{Memoria de Trabajo} = (128 \times 256 \times 8) \text{ bytes} = 262,144 \text{ bytes} \approx 256 \text{ KB}$$
+$$\text{Working Memory} = (128 \times 256 \times 8) \text{ bytes} = 262,144 \text{ bytes} \approx 256 \text{ KB}$$
 
-Sumando las tablas de sustitución (S-Boxes) y búferes locales, cada hilo de minería demanda entre 256 KB y 356 KB de memoria de ultra-baja latencia.
+Including substitution boxes (S-Boxes) and operating buffers, each mining thread maintains an active footprint of ~256 KB to 356 KB.
 
-#### Ventajas Comparativas del Parámetro ($N=256, r=8$):
+#### Architectural Ramifications:
 
-1. **Alineación con la Memoria Caché L2:** Los procesadores modernos (arquitecturas x86_64 AMD Zen, Intel Core y procesadores ARMv8/v9 contemporáneos) cuentan habitualmente con entre 512 KB y 1024 KB de memoria caché de nivel 2 (L2) dedicada por cada núcleo físico. Dado que el espacio de trabajo de 256 KB reside con holgura dentro de la caché L2, el cómputo se ejecuta a la máxima velocidad de reloj interna del procesador, sin penalizaciones por latencia externa de memoria DRAM ni contención de caché L3.
-2. **Neutralización de Unidades GPU:** Las arquitecturas de procesamiento gráfico basan su rendimiento en el paralelismo masivo de miles de hilos ligeros (*Streaming Multiprocessors*), pero cuentan con cantidades insignificantes de memoria caché local por hilo (apenas 16 a 64 KB). Al exigir 256 KB por hilo, las GPU se ven forzadas a realizar lecturas continuas a través de los buses hacia la memoria VRAM global. La latencia de este acceso degrada el rendimiento de tal manera que la minería en GPU se vuelve inviable económicamente frente a un CPU de escritorio.
-3. **Inviabilidad Económica de Mineros ASIC y FPGA:** La fabricación de chips ASIC o la programación de FPGA con megabytes de memoria SRAM estática de alta velocidad por cada tubería de cálculo eleva los costos de diseño, silicio y disipación térmica a niveles prohibitivos. La curva de rendimiento por dólar y rendimiento por vatio de los procesadores comerciales de consumo masivo supera permanentemente a cualquier intento de construcción de hardware propietario.
+1. **L2 Cache Residency:** Modern consumer processors (Intel Core, AMD Zen series, Apple Silicon, and contemporary ARM64 architectures) provide between 512 KB and 1024 KB of dedicated L2 cache per core. Because the 256 KB working region fits entirely within local L2 cache, computation operates at full processor core clock speeds without memory bus stalls.
+2. **GPU Disqualification:** GPUs excel at performing lightweight, parallel operations across thousands of simple threads, but provide minimal on-chip cache per compute unit (frequently under 32–64 KB). Forcing a 256 KB working set per thread exhausts on-chip GPU SRAM and causes constant thrashing to external high-latency VRAM. Consequently, GPUs deliver inferior hash-per-watt ratios compared to standard CPUs.
+3. **ASIC and FPGA Infeasibility:** Fabricating custom ASIC silicon with large banks of fast SRAM on-die dramatically increases die size, defect rates, and silicon fabrication costs. The cost-to-performance ratio makes custom ASIC development commercially unviable against off-the-shelf consumer CPUs.
 
-### 4.2 Retargeting Dinámico: Dark Gravity Wave v3 (DGW-v3)
+### 4.2 Dynamic Retargeting: Dark Gravity Wave v3 (DGW-v3)
 
-Para mitigar los ataques de salto de potencia de cálculo (*hashrate hopping*) y absorber fluctuaciones repentinas de mineros que ingresan o abandonan la red, Korsh implementa el algoritmo de ajuste de dificultad **Dark Gravity Wave v3 (DGW-v3)**.
+To safeguard against hashrate volatility and opportunistic multi-pool hopping, Korsh employs **Dark Gravity Wave v3**:
+* **Per-Block Recalibration:** Difficulty recalculates continuously at each block instead of arbitrary fixed windows.
+* **Weighted Harmonic Moving Average:** A 20-block rolling window dynamically calculates expected intervals, assigning higher statistical weights to the most recent blocks.
+* **Bound Constraints:** Dampening parameters prevent runaway difficulty spikes and eliminate timestamp manipulation (*time-warp attacks*).
 
-* **Ajuste Bloque a Bloque:** A diferencia de Bitcoin, cuya dificultad se recalibra cada 2016 bloques (~2 semanas), Korsh recalcula la dificultad matemática requerida con cada nuevo bloque minado.
-* **Promedio Armónico Ponderado de 20 Bloques:** DGW-v3 evalúa los intervalos de tiempo y la dificultad de los últimos 20 bloques mediante una ponderación no lineal que asigna mayor peso estadístico a los bloques más recientes.
-* **Límites de Oscilación Estricta:** El algoritmo restringe los saltos de dificultad dentro de factores controlados para prevenir la manipulación de marcas temporales (*time-warp attacks*).
+### 4.3 Layer 2: Deterministic Masternodes (DIP0003)
 
-### 4.3 Capa 2: Masternodes Deterministas (DIP0003)
-
-La segunda capa de Korsh abandona el obsoleto modelo de masternodes basados en mensajes P2P no deterministas (*legacy masternodes*) e implementa la especificación **DIP0003 (Deterministic Masternode Lists)**.
-
-En este paradigma, el conjunto de Masternodes válidos se calcula y valida de forma determinista directamente dentro del consenso de la blockchain mediante transacciones especiales del mempool:
-
-* **Transacción de Registro de Proveedor (ProRegTx):** El operador congela un UTXO con la cantidad exacta de colateral requerida (**1,500 KSH** para un Masternode Regular o **7,500 KSH** para un Masternode Evo) y publica las claves criptográficas diferenciadas en la cadena.
-* **Separación de Llaves Criptográficas:**
-  * **Owner Key (Clave de Propietario):** Utilizada exclusivamente para actualizar parámetros administrativos del nodo o delegar el colateral. Nunca se expone en el servidor que ejecuta el nodo.
-  * **Operator Key (Clave de Operador - BLS):** Clave pública de firma BLS utilizada por el servidor remoto para firmar mensajes de consenso de red, quórums y bloques.
-  * **Voting Key (Clave de Votación):** Utilizada para emitir votos en el sistema de gobernanza descentralizada.
-  * **Payout Address (Dirección de Pago):** Dirección estándar de la billetera fría donde se deposita de manera directa y automática el 30% de las recompensas del bloque (0.60 KSH), protegiendo los fondos contra cualquier vulnerabilidad del servidor en la nube.
+The second tier complies with the **DIP0003** specification, establishing an on-chain deterministic state machine for masternode registries:
+* **Provider Registration Transaction (ProRegTx):** Operators lock an exact unspent transaction output (UTXO) of **1,500 KSH** (Regular) or **7,500 KSH** (Evolution) and broadcast cryptographic key delegations on-chain.
+* **Separation of Keys:**
+  * **Owner Key:** Authorizes administrative operations and collateral reassignment; kept securely in cold offline storage.
+  * **Operator Key (BLS):** Used exclusively by the active VPS server to sign peer-to-peer consensus messages and quorum operations.
+  * **Voting Key:** Used to participate in community governance and proposal voting.
+  * **Payout Script:** Cold wallet address receiving the automated 30% masternode payment (0.60 KSH in Era 1), ensuring operational servers hold no spendable balance.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│            ESQUEMA DE CLAVES DIP0003 EN KORSH CORE                     │
+│                   DIP0003 KEY SEGREGATION ARCHITECTURE                │
 ├───────────────────┬────────────────────────────────────────────────────┤
-│ Clave             │ Responsabilidad y Aislamiento de Seguridad         │
+│ Key Role          │ Security Boundary & Storage Location               │
 ├───────────────────┼────────────────────────────────────────────────────┤
-│ Owner Key         │ Control del colateral; en almacenamiento frío.     │
-│ Operator Key      │ Firma BLS en el servidor VPS activo de Capa 2.     │
-│ Voting Key        │ Sufragio en propuestas de gobernanza comunitaria.  │
-│ Payout Script     │ Destino de cobro del 30% de la recompensa.         │
+│ Owner Key         │ Collateral authority; offline cold storage.        │
+│ Operator Key      │ BLS signing key on remote production server.       │
+│ Voting Key        │ Governance voting privileges.                      │
+│ Payout Address    │ Reward destination address; cold storage wallet.   │
 └───────────────────┴────────────────────────────────────────────────────┘
 ```
 
-### 4.4 Quórums LLMQ y Criptografía de Umbral BLS
+### 4.4 LLMQ Quorums and BLS Threshold Signatures
 
-Los Masternodes se agrupan periódicamente en **Quórums de Masternodes de Larga Duración (LLMQ - Long-Living Masternode Quorums)** formados de manera pseudoaleatoria y determinista mediante el protocolo de Generación de Claves Distribuidas (DKG - *Distributed Key Generation*).
+Masternodes deterministically form **Long-Living Masternode Quorums (LLMQs)** using a non-interactive Distributed Key Generation (DKG) protocol.
 
-Los miembros del quórum emplean el esquema de firmas agregadas **Boneh-Lynn-Shacham (BLS)** sobre la curva elíptica BLS12-381. Cuando un subconjunto umbral del quórum valida un mensaje o bloque, sus firmas parciales se combinan en una única firma de umbral compacta, verificable por cualquier nodo de la red con mínimo costo computacional y sin sobrecargar el ancho de banda del protocolo P2P.
+By leveraging **Boneh-Lynn-Shacham (BLS12-381)** threshold cryptography, quorums aggregate individual member signatures into a single, compact threshold signature. This enables high-velocity consensus validation across thousands of network participants with minimal bandwidth and processing overhead.
 
-### 4.5 InstantSend: Liquidación Instantánea y Protección Doble Gasto
+### 4.5 InstantSend: Real-Time Settlement and Double-Spend Immunity
 
-La tecnología **InstantSend** aprovecha los quórums LLMQ para otorgar finalidad casi instantánea a las transacciones ordinarias en la red Korsh:
+With **InstantSend**, transaction inputs are evaluated and locked by active LLMQs within **2 to 3 seconds**:
+1. An incoming transaction is broadcast to the network.
+2. The active quorum verifies that the referenced UTXOs are unspent and generates an *InstantSend Lock (ISLOCK)*.
+3. Once an ISLOCK is propagated, all full nodes recognize the transaction as irreversible.
+4. Any competing transaction attempting a double spend is deterministically dropped, enabling retail and automated payment environments to accept zero-confirmation transactions safely.
 
-1. El emisor transmite una transacción de transferencia.
-2. Los quórums LLMQ verifican que las entradas (UTXOs) no hayan sido gastadas previamente y emiten un bloqueo determinista (*InstantSend Lock - ISLOCK*).
-3. Una vez generado el ISLOCK (en un lapso habitual de **2 a 3 segundos**), los nodos completos y billeteras marcan la transacción como definitiva e irreversible.
-4. Cualquier intento concurrente de transmitir un conflicto de doble gasto es rechazado de inmediato por todos los nodos, permitiendo a comerciantes, cajeros y pasarelas de pago entregar bienes o servicios sin aguardar múltiples confirmaciones de minería.
+### 4.6 ChainLocks: Cryptographic Protection Against 51% Reorganization Attacks
 
-### 4.6 ChainLocks: Inmunidad Criptográfica ante Ataques de Reorganización del 51%
+ChainLocks effectively eliminate deep blockchain reorganization threats:
+1. Upon receiving a newly mined block from Layer 1, the LLMQ evaluates block validity.
+2. Once verified, quorum members sign a `CLSIG` (ChainLock Signature).
+3. When the threshold is reached, the signed ChainLock is broadcast across the network.
+4. **Finality Rule:** Once a block receives a ChainLock, nodes permanently reject any competing chain branch at equal or lower block height, regardless of proof-of-work difficulty.
+5. This renders hostile private mining attacks completely powerless, providing institutional-grade settlement guarantees.
 
-Uno de los mayores peligros para cadenas PoW de mediana capitalización es el riesgo de ataques de reorganización profunda del 51%, donde un minero malicioso acumula poder de cómputo privado para revertir bloques anteriores. Korsh neutraliza esta amenaza mediante **ChainLocks**:
+### 4.7 Decentralized On-Chain Governance and Treasury
 
-1. Tan pronto como un minero de Capa 1 encuentra un bloque válido y lo propaga a la red, el quórum LLMQ activo evalúa el bloque recibido.
-2. Si el bloque cumple las reglas de consenso, cada miembro del quórum firma un mensaje `CLSIG` (ChainLock Signature).
-3. Al alcanzarse el umbral de firmas, se difunde la firma combinada del ChainLock.
-4. **Regla de Inmutabilidad:** A partir del instante en que un bloque es sellado con un ChainLock, todos los nodos de la red Korsh rechazan deterministamente cualquier bloque alternativo con la misma o menor altura, independientemente de cuánta dificultad o trabajo acumulado pretenda presentar una cadena competidora.
-5. De este modo, la probabilidad de reorganización se reduce a cero, brindando la seguridad de liquidación de una red multimillonaria desde sus fases tempranas.
-
-### 4.7 Gobernanza Descentralizada y Propuestas On-Chain
-
-La red Korsh integra un sistema de tesorería y gobernanza en cadena gestionado directamente por los operadores de Masternodes. Los miembros de la comunidad pueden formular propuestas presupuestarias para financiar el desarrollo de software, auditorías de seguridad, campañas de difusión o mejoras de infraestructura.
-
-Mediante su clave de votación (`Voting Key`), cada Masternode activo emite un voto (*Sí*, *No* o *Abstención*). Las propuestas que alcancen un respaldo neto positivo superior al umbral establecido son liquidadas automáticamente por el protocolo mediante **superbloques** programados, garantizando la sostenibilidad financiera del proyecto a perpetuidad sin intermediarios ni tesorerías centralizadas.
+Masternode operators govern protocol growth through on-chain proposals. Anyone can submit development proposals funded via protocol **superblocks**. Operators vote using their `Voting Key`, ensuring decentralized, self-sustaining development without centralized foundations.
 
 ---
 
-## 5. Tokenomics y Emisión Monetaria
+## 5. Tokenomics and Monetary Issuance
 
-### 5.1 Principios Económicos Fundamentales
+### 5.1 Foundational Economic Tenets
 
-1. **Escasez Matemática Absoluta:** El suministro total está fijado en un máximo inmutable de **10,000,000 KSH**. Ninguna función ni actualización futura del protocolo puede violar este límite.
-2. **0% Premine y Cero Venta de Tokens:** El bloque Génesis fue lanzado sin recompensas asignadas a los desarrolladores, sin rondas semilla, sin preventas ni asignaciones para fondos de riesgo.
-3. **Incentivos Equilibrados:** El subsidio por bloque premia conjuntamente el aporte energético y físico de los mineros PoW (70%) y el sostenimiento de infraestructura de alta disponibilidad provisto por los Masternodes (30%).
+1. **Absolute Hard Cap:** The maximum supply is strictly limited to **10,000,000 KSH**. When cumulative issuance reaches this cap, block subsidies drop to zero.
+2. **Fair Launch (0% Premine):** No tokens were pre-minted or set aside for founders, investors, or foundations.
+3. **Balanced Incentive Distribution:** 70% of block rewards compensate computational power (miners) while 30% rewards high-availability infrastructure (masternodes).
 
-### 5.2 Formulación Matemática de la Emisión
+### 5.2 Mathematical Emission Formulation
 
-La recompensa de subsidio de bloque $S(h)$ a una altura determinada $h$ está descrita por la función escalonada de reducción a la mitad:
+The block subsidy $S(h)$ at block height $h$ is defined by:
 
 $$S(h) = \left\lfloor \frac{S_0}{2^{\lfloor h / H \rfloor}} \right\rfloor$$
 
-Donde:
-* $S_0 = 2.00 \text{ KSH}$ (Subsidio base inicial por bloque).
-* $H = 2,500,000$ (Intervalo de halving expresado en bloques).
-* $\lfloor x \rfloor$ denota la función piso (redondeo hacia el entero inferior más cercano).
+Where:
+* $S_0 = 2.00 \text{ KSH}$ (Initial base block subsidy).
+* $H = 2,500,000$ (Halving interval in blocks).
+* $\lfloor x \rfloor$ denotes the floor function.
 
-La asignación económica interna entre mineros y operadores de Masternodes se computa como:
+Subsidies are split as follows:
 
-$$\text{Recompensa Minero: } R_{\text{miner}}(h) = 0.70 \times S(h)$$
+$$\text{Miner Reward: } R_{\text{miner}}(h) = 0.70 \times S(h)$$
 
-$$\text{Recompensa Masternode: } R_{\text{mn}}(h) = 0.30 \times S(h)$$
+$$\text{Masternode Reward: } R_{\text{mn}}(h) = 0.30 \times S(h)$$
 
-### 5.3 Calendario de Emisión Multiera
+### 5.3 Multi-Era Emission Schedule
 
-Dado el intervalo objetivo de 60 segundos por bloque, un ciclo de halving de 2,500,000 bloques corresponde con exactitud a:
+At 60 seconds per block, each halving period covers:
 
-$$T_{\text{era}} = \frac{2,500,000 \times 60 \text{ s}}{86,400 \text{ s/día} \times 365.25 \text{ días/año}} \approx 4.752 \text{ años} \ (\approx 4 \text{ años y } 9 \text{ meses})$$
+$$T_{\text{era}} = \frac{2,500,000 \times 60 \text{ s}}{86,400 \text{ s/day} \times 365.25 \text{ days/year}} \approx 4.752 \text{ years}$$
 
-A continuación se detalla la trayectoria completa de emisión por eras:
-
-| Era | Rango de Bloques | Duración Estimada | Subsidio Total | Minero (70%) | Masternode (30%) | Emisión de la Era | Suministro Acumulado | % del Total |
+| Era | Block Height | Est. Timeline | Block Subsidy | Miner (70%) | Masternode (30%) | Era Issuance | Cumulative Supply | % of Total Cap |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Era 1** | $0 - 2,499,999$ | Años 0.00 – 4.75 | **2.00 KSH** | 1.40 KSH | 0.60 KSH | 5,000,000 KSH | **5,000,000 KSH** | 50.00% |
-| **Era 2** | $2,500,000 - 4,999,999$ | Años 4.75 – 9.50 | **1.00 KSH** | 0.70 KSH | 0.30 KSH | 2,500,000 KSH | **7,500,000 KSH** | 75.00% |
-| **Era 3** | $5,000,000 - 7,499,999$ | Años 9.50 – 14.25 | **0.50 KSH** | 0.35 KSH | 0.15 KSH | 1,250,000 KSH | **8,750,000 KSH** | 87.50% |
-| **Era 4** | $7,500,000 - 9,999,999$ | Años 14.25 – 19.00 | **0.25 KSH** | 0.175 KSH | 0.075 KSH | 625,000 KSH | **9,375,000 KSH** | 93.75% |
-| **Era 5** | $10,000,000 - 12,499,999$ | Años 19.00 – 23.75 | **0.125 KSH** | 0.0875 KSH | 0.0375 KSH | 312,500 KSH | **9,687,500 KSH** | 96.88% |
-| **Era 6** | $12,500,000 - 14,999,999$ | Años 23.75 – 28.50 | **0.0625 KSH** | 0.04375 KSH | 0.01875 KSH | 156,250 KSH | **9,843,750 KSH** | 98.44% |
-| **Cola** | $\ge 15,000,000$ | Años 28.50+ | $\to 0$ | $\to 0$ | $\to 0$ | Remanente | **10,000,000 KSH** | **100.00%** |
+| **Era 1** | $0 - 2,499,999$ | Years 0.00 – 4.75 | **2.00 KSH** | 1.40 KSH | 0.60 KSH | 5,000,000 KSH | **5,000,000 KSH** | 50.00% |
+| **Era 2** | $2,500,000 - 4,999,999$ | Years 4.75 – 9.50 | **1.00 KSH** | 0.70 KSH | 0.30 KSH | 2,500,000 KSH | **7,500,000 KSH** | 75.00% |
+| **Era 3** | $5,000,000 - 7,499,999$ | Years 9.50 – 14.25 | **0.50 KSH** | 0.35 KSH | 0.15 KSH | 1,250,000 KSH | **8,750,000 KSH** | 87.50% |
+| **Era 4** | $7,500,000 - 9,999,999$ | Years 14.25 – 19.00 | **0.25 KSH** | 0.175 KSH | 0.075 KSH | 625,000 KSH | **9,375,000 KSH** | 93.75% |
+| **Era 5** | $10,000,000 - 12,499,999$ | Years 19.00 – 23.75 | **0.125 KSH** | 0.0875 KSH | 0.0375 KSH | 312,500 KSH | **9,687,500 KSH** | 96.88% |
+| **Era 6** | $12,500,000 - 14,999,999$ | Years 23.75 – 28.50 | **0.0625 KSH** | 0.04375 KSH | 0.01875 KSH | 156,250 KSH | **9,843,750 KSH** | 98.44% |
+| **Tail** | $\ge 15,000,000$ | Years 28.50+ | $\to 0$ | $\to 0$ | $\to 0$ | Remainder | **10,000,000 KSH** | **100.00%** |
 
-Al alcanzar la cota superior del suministro máximo, la recompensa de bloque por emisión cesa de forma determinista y los validadores de la red (tanto mineros como Masternodes) pasarán a ser remunerados exclusivamente mediante las tarifas y comisiones de transacción generadas en el bloque.
+### 5.4 Collateral Mechanics and Masternode Supply Shock
 
-### 5.4 Dinámica de Colateral y Shock de Oferta de Masternodes
+The 1,500 KSH collateral acts as an organic supply absorption mechanism. 
 
-El requerimiento de inmovilización de **1,500 KSH** por cada Masternode Regular actúa como un poderoso estabilizador macroeconómico de la oferta circulante.
+Annual rewards for masternodes during Era 1 total:
 
-Con una producción regular de 1 bloque por minuto (1,440 bloques diarios), el fondo de recompensas anual distribuido a los Masternodes durante la Era 1 es de:
+$$\text{Annual MN Reward Pool} = 1,440 \text{ blocks/day} \times 365.25 \text{ days} \times 0.60 \text{ KSH} = \mathbf{315,576 \text{ KSH/year}}$$
 
-$$\text{Fondo Anual de Masternodes} = 1,440 \text{ bloques/día} \times 365.25 \text{ días} \times 0.60 \text{ KSH} = \mathbf{315,576 \text{ KSH / año}}$$
+Projected individual masternode annual return on investment (ROI) is:
 
-El rendimiento porcentual anual estimado (**ROI**) para un operador de Masternode individual se calcula como:
+$$\text{Projected Annual ROI} = \left( \frac{\text{Annual MN Pool}}{M_{\text{active}} \times 1,500} \right) \times 100\%$$
 
-$$\text{ROI Anual Estimado} = \left( \frac{\text{Fondo Anual de Masternodes}}{M_{\text{activos}} \times C} \right) \times 100\%$$
-
-Donde $M_{\text{activos}}$ es la cantidad de Masternodes activos en la red y $C = 1,500 \text{ KSH}$ es el colateral requerido.
-
-#### Análisis de Sensibilidad y Absorción de Oferta:
-
-| Masternodes Activos | KSH Bloqueados en Colateral | % de Oferta Bloqueada (sobre 5M KSH) | KSH Anuales por Masternode | **ROI Anual Estimado** |
+| Active Masternodes | Total Locked KSH | % Circulating Locked (at 5M KSH) | Annual KSH / Node | **Estimated Annual ROI** |
 | :---: | :---: | :---: | :---: | :---: |
 | **50** | 75,000 KSH | 1.50% | 6,311.5 KSH | **420.8%** |
 | **100** | 150,000 KSH | 3.00% | 3,155.8 KSH | **210.4%** |
@@ -290,131 +284,118 @@ Donde $M_{\text{activos}}$ es la cantidad de Masternodes activos en la red y $C 
 | **1,500** | 2,250,000 KSH | 45.00% | 210.4 KSH | **14.0%** |
 | **2,000** | 3,000,000 KSH | 60.00% | 157.8 KSH | **10.5%** |
 
-Este modelo genera un efecto autorregulador denominado **Mecanismo de Absorción de Oferta**:
-* A menor cantidad de Masternodes en funcionamiento, el rendimiento anual por nodo escala dramáticamente, atrayendo de inmediato nuevos operadores dispuestos a adquirir KSH en el mercado secundario para poner en marcha sus nodos.
-* A mayor cantidad de Masternodes en línea, una fracción masiva de la masa monetaria líquida (entre el 15% y el 45%+) queda bloqueada y retirada de la venta, generando un shock de oferta positivo que protege el valor fundamental del token.
+This mechanism stabilizes circulating market supply: high node participation locks significant proportions of liquid supply, while lower node counts automatically enhance yields to attract new infrastructure operators.
 
 ---
 
-## 6. Ecosistema de Software e Infraestructura
-
-El proyecto Korsh dispone de un conjunto integral de aplicaciones nativas y herramientas de infraestructura listas para producción:
+## 6. Software Ecosystem and Infrastructure
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│                   SUITE DE SOFTWARE DE LA RED KORSH                    │
+│                        KORSH SOFTWARE ECOSYSTEM                        │
 ├────────────────────────────────────────────────────────────────────────┤
-│  [korshd]           Nodo completo y demonio de consenso de servidor    │
-│  [korsh-qt]         Billetera con GUI nativa y asistente de Masternode │
-│  [korsh-miner]      Minero CPU C/C++ optimizado para AVX2 y AVX-512    │
-│  [wallet.korsh.org] Billetera web ligera sin descarga de blockchain    │
-│  [explorer.korsh.org] Explorador público en tiempo real                │
-│  [pool.korsh.org]   Servidor de minería en piscina compatible Stratum  │
-│  [Mobile App]       App móvil para monitoreo y gestión de red          │
+│  [korshd]           Full node consensus engine and daemon              │
+│  [korsh-qt]         Desktop GUI wallet with Masternode Setup Wizard    │
+│  [korsh-miner]      Dedicated CPU miner optimized for AVX2 and AVX-512 │
+│  [wallet.korsh.org] Lightweight non-custodial browser wallet           │
+│  [explorer.korsh.org] Real-time public blockchain explorer             │
+│  [pool.korsh.org]   Stratum mining pool infrastructure                 │
+│  [Mobile App]       Mobile mining and node monitoring application      │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 6.1 Korsh Core Daemon y Billetera Qt GUI
-El software base de la red comprende el demonio sin interfaz (`korshd`), la herramienta de línea de comandos (`korsh-cli`) y el cliente de escritorio con interfaz gráfica (`korsh-qt`):
-* **Asistente Integrado de Masternodes (MN Setup Wizard):** Interfaz gráfica intuitiva que guía al usuario en la generación de claves, preparación del colateral y despliegue del nodo determinista sin requerir manipulación avanzada de comandos.
-* **Billetera Unificada y Tema Oscuro:** Diseño visual ergonómico con visualización en tiempo real del saldo, transacciones bloqueadas por InstantSend y estado de sincronización de la cadena.
-* **Seguridad Criptográfica:** Cifrado completo del almacén de claves local y soporte para respaldo determinista.
+### 6.1 Korsh Core Daemon and Qt GUI Wallet
+The core client comprises `korshd` (daemon), `korsh-cli` (command line RPC), and `korsh-qt` (graphical interface):
+* **Integrated Masternode Wizard:** Intuitive step-by-step guidance for key generation, collateral registration, and remote node deployment.
+* **Modern UI & Dark Theme:** Clean interface displaying InstantSend locks, active peers, and balance breakdowns.
+* **Encrypted Key Store:** Deterministic wallet derivation and encrypted secret storage.
 
-### 6.2 Software de Minería Optimizado (AVX2 / AVX-512)
-Para maximizar el aprovechamiento de la memoria caché y las unidades aritmético-lógicas de los procesadores actuales, el equipo de Korsh distribuye un software de minería de CPU independiente y altamente optimizado:
-* Escrito en C/C++ de bajo nivel con rutinas vectoriales intrínsecas para **AVX2**, **AVX-512**, **SHA-NI** y extensiones **NEON** en procesadores ARM64.
-* Control dinámico de afinidad de núcleos para evitar sobrecalentamiento y maximizar el rendimiento por ciclo de reloj (*hash/watt*).
-* Compatibilidad nativa con el protocolo Stratum para conexiones a piscinas públicas y privadas.
+### 6.2 Dedicated CPU Miner (AVX2 / AVX-512)
+High-performance standalone C/C++ CPU mining binary utilizing low-level vector SIMD instructions:
+* Optimized routines for **AVX2**, **AVX-512**, **SHA-NI**, and ARM64 **NEON**.
+* Thread affinity management to maximize hash-per-watt efficiency.
+* Full Stratum protocol compatibility for pool and solo hashing.
 
-### 6.3 Billetera Ligera Web (Web Wallet)
-Disponible en `wallet.korsh.org`:
-* Permite a usuarios sin capacidad de almacenamiento local gestionar fondos, enviar pagos instantáneos con InstantSend y monitorear balances.
-* Criptografía client-side: las claves privadas se generan y cifran localmente en el navegador del usuario y nunca abandonan su dispositivo.
+### 6.3 Client-Side Web Wallet
+Hosted at `wallet.korsh.org`:
+* Lightweight browser-based wallet without downloading the blockchain.
+* Client-side private key generation: private keys never leave the browser.
 
-### 6.4 Explorador Público de la Blockchain
-Accesible a través de `explorer.korsh.org`:
-* Herramienta pública e independiente para la auditoría de bloques, transacciones, direcciones, dificultad DGW-v3, altura de red y hashrate global.
-* Monitor de quórums LLMQ, Masternodes activos y firmas de ChainLocks en tiempo real.
+### 6.4 Public Block Explorer
+Hosted at `explorer.korsh.org`:
+* Real-time auditing of blocks, transactions, difficulty, network hashrate, active masternodes, and ChainLock status.
 
-### 6.5 Infraestructura de Minería en Piscina (Mining Pool Stratum)
-Operando en `pool.korsh.org`:
-* Infraestructura de minería colaborativa con arquitectura de baja latencia, soporte de pagos automáticos y panel estadístico en vivo.
-* Opciones de minería grupal (PPLNS) y minería en solitario (Solo Mining) a través del protocolo Stratum estándar.
+### 6.5 Official Mining Pool (Stratum)
+Hosted at `pool.korsh.org`:
+* Low-latency Stratum servers supporting PPLNS pooled mining and solo mining.
 
-### 6.6 Aplicación Móvil de Minería y Monitoreo
-Una solución móvil orientada a democratizar la interacción con la red, facilitando la consulta del estado de los Masternodes propios, el monitoreo del hashrate de la red y la gestión segura de transacciones.
+### 6.6 Mobile Mining and Network Monitoring App
+Enables convenient mobile monitoring of node statuses, network difficulty, and on-the-go wallet operations.
 
 ---
 
-## 7. Análisis de Seguridad y Resistencia de Red
+## 7. Security Analysis and Threat Resistance
 
-### 7.1 Inviabilidad Económica de Alquiler de Hashrate
-En redes que emplean algoritmos estándar dependientes de memoria DRAM o SHA-256/Scrypt, atacantes externos pueden alquilar rápidamente hashrate masivo en plataformas de computación en la nube (e.g. NiceHash) para ejecutar un ataque sorpresivo. 
+### 7.1 Economic Infeasibility of Hashrate Rental
+Standard GPU/ASIC algorithms allow attackers to temporarily rent massive computational power on platforms like NiceHash. Under Yespower ($N=256, r=8$), performance is bounded by CPU L2 cache latency. Cloud virtualized environments experience severe cache thrashing across virtual CPUs, making rental-based 51% attacks impractical and uneconomic.
 
-Bajo **Yespower 1.0 ($N=256, r=8$)**, el factor limitante es la memoria caché L2 del procesador. Las granjas de servidores en la nube virtualizadas sufren una severa penalización de rendimiento cuando múltiples hilos virtuales compiten por recursos de caché compartidos. No existe un mercado global de alquiler de hashrate Yespower consolidado que permita adquirir el 51% de la red de forma económica.
+### 7.2 Sybil Attack Resistance in Layer 2
+Subverting LLMQ quorums requires acquiring a substantial percentage of all active masternodes. Given a 10,000,000 KSH total cap, attempting to accumulate sufficient collateral on open markets triggers extreme upward slippage, financially penalizing attackers before quorum thresholds can be compromised.
 
-### 7.2 Resistencia a Ataques Sybil en la Red de Masternodes
-Para alcanzar una influencia maliciosa en los quórums LLMQ de Capa 2, un atacante requeriría controlar más del 40-50% de los Masternodes activos. 
-
-Considerando una red base de tan solo 500 Masternodes, el atacante necesitaría acaparar más de 375,000 KSH en colaterales. Debido a que el suministro total es de únicamente 10,000,000 KSH y la liquidez circulante en los primeros años es limitada, la compra masiva de monedas en los libros de órdenes causaría un deslizamiento de precio exponencial (*slippage*). El atacante sufriría un costo económico devastador, destruyendo el valor de su propia inversión en caso de pretender vulnerar la red.
-
-### 7.3 Punto de Control Determinista (Checkpoints)
-El cliente Korsh Core incorpora puntos de control criptográficos (*checkpoints*) periódicos en cada versión de lanzamiento oficial, impidiendo que cadenas bifurcadas con antigüedades profundas puedan ser reconocidas como válidas por nodos recién conectados.
+### 7.3 Deterministic Checkpointing
+Periodic hardcoded checkpoints within core releases bound reorganization depth, preventing long-range reorganization attacks against newly connecting peers.
 
 ---
 
-## 8. Hoja de Ruta (Roadmap)
+## 8. Strategic Roadmap
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│                        HOJA DE RUTA DE KORSH ($KSH)                    │
+│                        KORSH STRATEGIC ROADMAP                         │
 └────────────────────────────────────────────────────────────────────────┘
 
- [Fase 1: Génesis y Consenso Base] ─────────────► (COMPLETADO)
-  • Lanzamiento de la Mainnet con 0% de preminado y Fair Launch.
-  • Activación del algoritmo Yespower 1.0 (N=256, r=8).
-  • Emisión verificada del Bloque Génesis con mensaje tributo.
-  • Publicación de binarios completos multiplataforma (Linux, Win, macOS).
+ [Phase 1: Genesis & Base Consensus] ──────────► (COMPLETED)
+  • Mainnet launch with 0% premine (Fair Launch).
+  • Yespower 1.0 (N=256, r=8) activated on Layer 1.
+  • Verified genesis block with memorial tribute message.
+  • Multi-platform release binaries (Linux, Windows, macOS).
 
- [Fase 2: Infraestructura y Comunidad] ─────────► (COMPLETADO / ACTIVO)
-  • Despliegue del explorador de bloques oficial (explorer.korsh.org).
-  • Publicación de la Billetera Web cliente (wallet.korsh.org).
-  • Apertura de la Mining Pool oficial Stratum (pool.korsh.org).
-  • Creación y expansión de canales comunitarios (Discord, Telegram).
+ [Phase 2: Infrastructure & Community] ────────► (COMPLETED / ACTIVE)
+  • Public block explorer online (explorer.korsh.org).
+  • Non-custodial web wallet deployed (wallet.korsh.org).
+  • Official Stratum mining pool live (pool.korsh.org).
+  • Active Discord and Telegram community channels established.
 
- [Fase 3: Herramientas de Minería y Adopción] ──► (EN PROGRESO)
-  • Distribución del software minero propietario optimizado para AVX-512/AVX2.
-  • Expansión de pools de minería con servidores Stratum de baja latencia global.
-  • Asistente automatizado de configuración rápida de Masternodes en un clic (VPS).
-  • Auditoría integral de seguridad de componentes web y aplicaciones móviles.
+ [Phase 3: Mining Tools & Ecosystem Adoption] ─► (IN PROGRESS)
+  • Proprietary AVX2 / AVX-512 optimized CPU miner release.
+  • Global expansion of low-latency Stratum mining servers.
+  • Automated one-click VPS deployment scripts for masternodes.
+  • Full third-party security audits for web and mobile components.
 
- [Fase 4: Integración en Mercados e Interoperabilidad] ─► (PRÓXIMO)
-  • Indexación en plataformas de seguimiento de hashrate y analítica
-    (MiningPoolStats, CoinGecko, CoinMarketCap).
-  • Integración en directorios y plataformas especializadas de Masternodes.
-  • Listados en casas de cambio descentralizadas (DEX) y plataformas centralizadas (CEX).
-  • Desarrollo de librerías y SDKs ligeros para integración con comercios electrónicos.
+ [Phase 4: Market Integration & Scalability] ──► (UPCOMING)
+  • Indexing on hashrate tracking platforms (MiningPoolStats, CoinGecko, CMC).
+  • Integration with major masternode analytical directories.
+  • Exchange listings across decentralized (DEX) and centralized (CEX) venues.
+  • Merchant SDKs and payment gateway integrations.
 ```
 
 ---
 
-## 9. Conclusión
+## 9. Conclusion
 
-**Korsh ($KSH)** representa una respuesta firme y técnicamente rigurosa a la degradación de los principios de descentralización que han afectado a las criptomonedas de primera y segunda generación.
+**Korsh ($KSH)** revitalizes the foundational ethos of cryptocurrency: accessible, trustless, and resistant to central monopolization. By uniting the democratic participation of **pure CPU Proof-of-Work (Yespower 1.0)** with the transaction speed, governance, and 51% defense of **Deterministic Masternodes (DIP0003 + ChainLocks)**, Korsh delivers a secure, scalable, and genuinely decentralized monetary network.
 
-Al unificar la soberanía y accesibilidad computacional de la **Prueba de Trabajo pura en CPU (Yespower 1.0)** con la velocidad de liquidación comercial, la gobernanza descentralizada y la invulnerabilidad ante reorganizaciones del 51% aportada por los **Masternodes Deterministas (DIP0003 + ChainLocks)**, Korsh logra un equilibrio armónico entre seguridad, descentralización y escalabilidad práctica.
-
-Respaldado por un **lanzamiento 100% justo, sin preminado**, un límite de suministro inmutable de **10,000,000 KSH** y una suite completa de software de código abierto, Korsh se consolida como una alternativa monetaria robusta, orientada a empoderar a la comunidad y a garantizar la libertad transaccional para la era digital.
+With an immutable cap of **10,000,000 KSH**, **0% premine**, and a comprehensive software ecosystem, Korsh stands as an enduring platform for financial sovereignty.
 
 ---
 
-## 10. Aviso Legal (Disclaimer)
+## 10. Legal Disclaimer
 
-*Este documento técnico (Whitepaper) tiene fines estrictamente informativos, educativos y de divulgación arquitectónica. Korsh es un proyecto de software de código abierto distribuido y descentralizado, libre de intermediarios financieros centralizados con fines de lucro.*
+*This technical whitepaper is provided for informational and educational purposes only. Korsh is an open-source decentralized software initiative without a centralized corporate entity or profit-seeking governance.*
 
-*La adquisición, minería, operación de nodos y tenencia de activos digitales conlleva riesgos operacionales y fluctuaciones inherentes a los mercados tecnológicos. Ningún fragmento de este documento debe interpretarse como asesoramiento financiero, recomendación de inversión, oferta pública de valores o promesa garantizada de rentabilidad económica. Los participantes asumen la responsabilidad técnica y regulatoria exclusiva según la jurisdicción legal aplicable a su actividad.*
+*Engaging in cryptocurrency mining, node operations, and asset holdings involves market and operational risks. Nothing within this document constitutes financial advice, investment recommendations, or an offer of securities. Participants are solely responsible for ensuring compliance with applicable regional laws and regulations.*
 
 ---
 
 **© 2026 Korsh Open Source Development Community**  
-*Licencia MIT — Código y especificaciones accesibles públicamente.*
+*Licensed under the MIT License.*
